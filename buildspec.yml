@@ -1,20 +1,32 @@
 version: 0.2
+env:
+  parameter-store:
+    DOCKER_HUB_USER: /libz/dockerhub/user
+    DOCKER_HUB_TOKEN: /libz/dockerhub/token
+    RSI_CLIENT_ID: /libz/app/rsi/client-id
+    RSI_AUTH_REDIRECT_URL: /libz/app/rsi/auth-redirect-url
+
 phases:
   pre_build:
     commands:
+      - echo login to Amazon ECR
       - aws ecr get-login-password | 
-          docker login --username AWS --password-stdin $ECR_ENDPOINT
+          docker login --username AWS --password-stdin ${ECR_ENDPOINT}
+      - echo login to DockerHub
+      - echo ${DOCKER_HUB_TOKEN} |
+          docker login -u ${DOCKER_HUB_USER} --password-stdin
   build:
     commands:
-      - IMAGE_TAG=$PROJECT_VERSION-$(date +%Y%m%d)
+      - IMAGE_TAG=${PROJECT_VERSION}-$(date +%Y%m%d)
+      - echo build image...
       - docker build .
-          -t $ECR_ENDPOINT/libz:$IMAGE_TAG
-          --build-arg RSI_CLIENT_ID=$RSI_CLIENT_ID
-          --build-arg RSI_AUTH_REDIRECT_URL=$RSI_AUTH_REDIRECT_URL
+          -t ${ECR_ENDPOINT}/libz:${IMAGE_TAG}
+          --build-arg RSI_CLIENT_ID=${RSI_CLIENT_ID}
+          --build-arg RSI_AUTH_REDIRECT_URL=${RSI_AUTH_REDIRECT_URL}
   post_build:
     commands:
-      - echo push $ECR_ENDPOINT/libz:$IMAGE_TAG >> Amazon ECR
-      - docker push $ECR_ENDPOINT/libz:$IMAGE_TAG
+      - echo push ${ECR_ENDPOINT}/libz:${IMAGE_TAG} >> Amazon ECR
+      - docker push ${ECR_ENDPOINT}/libz:${IMAGE_TAG}
 artifacts:
   files: tools/deploy.sh
   discard-paths: yes
