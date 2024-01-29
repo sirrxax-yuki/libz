@@ -1,0 +1,7 @@
+PostResponse:
+  type: object
+  required:
+    - knowledge_id
+  properties:
+    knowledge_id:
+      type: integer

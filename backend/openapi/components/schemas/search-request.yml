@@ -1,0 +1,10 @@
+SearchRequest:
+  type: object
+  required:
+    - user
+    - keyword
+  properties:
+    user:
+      $ref: './user.yml'
+    keyword:
+      type: string

@@ -1,0 +1,12 @@
+KnowledgeMapping:
+  type: object
+  required:
+    - keywords
+    - knowledge
+  properties:
+    keywords:
+      type: array
+      items:
+        type: string
+    knowledge:
+      $ref: './knowledge.yml'

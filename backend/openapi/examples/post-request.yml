@@ -1,0 +1,8 @@
+user:
+  $ref: './active-user.yml'
+keywords:
+  - aaa
+  - bbb
+knowledge: xxx
+knowledge_type: text
+private: true

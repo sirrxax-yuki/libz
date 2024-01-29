@@ -1,0 +1,16 @@
+version: 1.1
+name: Post API
+
+tests:
+  post:
+    steps:
+      - name: Post a knowledge.
+        http:
+          url: http://${{env.APP_HOST}}:${{env.APP_PORT}}/post
+          method: POST
+          json:
+            $ref: '../examples/post-request.yml'
+          check:
+            status: /^20/
+          schema:
+            $ref: '../components/schemas/post-response.yml'

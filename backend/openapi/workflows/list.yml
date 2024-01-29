@@ -1,0 +1,16 @@
+version: 1.1
+name: List API
+
+tests:
+  post:
+    steps:
+      - name: Listup a knowledge.
+        http:
+          url: http://${{env.APP_HOST}}:${{env.APP_PORT}}/list
+          method: POST
+          json:
+            $ref: '../examples/list-request.yml'
+          check:
+            status: /^20/
+          schema:
+            $ref: '../components/schemas/list-response.yml'

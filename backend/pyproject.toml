@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "src"
+version = "0.1.0"
+description = ""
+authors = ["yuki.kawata <yuki.kawata@jp.ricoh.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = {extras = ["all"], version = "^0.109.0"}
+pydantic = "^2.5.3"
+python-dotenv = "^1.0.0"
+sqlalchemy = "^2.0.25"
+sqlalchemy-utils = "^0.41.1"
+mysql-connector-python = "^8.3.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.4"
+
+[tool.pytest.ini_options]
+pythonpath = "src"
+testpaths = ["tests",]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+

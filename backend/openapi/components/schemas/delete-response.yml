@@ -1,0 +1,9 @@
+DeleteResponse:
+  type: object
+  required:
+    - update
+  properties:
+    update:
+      type: array
+      items:
+        $ref: './knowledge-mapping.yml'

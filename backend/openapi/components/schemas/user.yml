@@ -1,0 +1,7 @@
+User:
+  type: object
+  required:
+    - data
+  properties:
+    data:
+      $ref: './rsi/user.yml'

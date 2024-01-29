@@ -1,0 +1,49 @@
+RSIUser:
+  type: object
+  required:
+    - sub
+    - name
+    - family_name
+    - given_name
+    - zoneinfo
+    - ext
+    - updated_at
+  properties:
+    sub:
+      type: string
+    name:
+      type: string
+    family_name:
+      type: string
+    given_name:
+      type: string
+    zoneinfo:
+      type: string
+    locale:
+      type: string
+    ext:
+      type: object
+      required:
+        - tenantId
+        - userId
+        - status
+        - roles
+      properties:
+        tenantId:
+          type: string
+        userId:
+          type: string
+        status:
+          type: string
+        description:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+        permittedServices:
+          type: array
+          items:
+            type: string
+    updated_at:
+      type: integer

@@ -1,0 +1,4 @@
+results:
+  - $ref: './rsi/knowledge.yml#/KnowledgeMapping1'
+  - $ref: './rsi/knowledge.yml#/KnowledgeMapping2'
+  - $ref: './rsi/knowledge.yml#/KnowledgeMapping3'

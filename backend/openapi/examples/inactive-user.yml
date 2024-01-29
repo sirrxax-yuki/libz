@@ -1,0 +1,2 @@
+data:
+  $ref: './rsi/inactive-user.yml'

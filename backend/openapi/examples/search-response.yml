@@ -1,0 +1,3 @@
+knowledges:
+  - $ref: './rsi/knowledge.yml#/Knowledge1'
+  - $ref: './rsi/knowledge.yml#/Knowledge2'

@@ -1,0 +1,46 @@
+version: 1.1
+name: knowledge APIs
+
+tests:
+  CRUD:
+    steps:
+      - name: Post a knowledge.
+        http:
+          url: http://${{env.APP_HOST}}:${{env.APP_PORT}}/post
+          method: POST
+          json:
+            $ref: '../examples/post-request.yml'
+          check:
+            status: /^20/
+          schema:
+            $ref: '../components/schemas/post-response.yml'
+      - name: Search knowledges.
+        http:
+          url: http://${{env.APP_HOST}}:${{env.APP_PORT}}/search
+          method: POST
+          json:
+            $ref: '../examples/search-request.yml'
+          check:
+            status: /^20/
+          schema:
+            $ref: '../components/schemas/search-response.yml'
+      - name: Listup a knowledge.
+        http:
+          url: http://${{env.APP_HOST}}:${{env.APP_PORT}}/list
+          method: POST
+          json:
+            $ref: '../examples/list-request.yml'
+          check:
+            status: /^20/
+          schema:
+            $ref: '../components/schemas/list-response.yml'
+      - name: Delete a knowledge.
+        http:
+          url: http://${{env.APP_HOST}}:${{env.APP_PORT}}/delete
+          method: DELETE
+          json:
+            $ref: '../examples/delete-request.yml'
+          check:
+            status: /^20/
+          schema:
+            $ref: '../components/schemas/delete-response.yml'

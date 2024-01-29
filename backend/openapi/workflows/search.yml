@@ -1,0 +1,16 @@
+version: 1.1
+name: Search API
+
+tests:
+  post:
+    steps:
+      - name: Search knowledges.
+        http:
+          url: http://${{env.APP_HOST}}:${{env.APP_PORT}}/search
+          method: POST
+          json:
+            $ref: '../examples/search-request.yml'
+          check:
+            status: /^20/
+          schema:
+            $ref: '../components/schemas/search-response.yml'

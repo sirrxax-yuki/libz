@@ -1,0 +1,33 @@
+Knowledge1:
+  knowledge_id: 123
+  type: text
+  contents: foo bar
+  private: true
+  user_id: yuki.kawata
+  user_name: yuki
+
+Knowledge2:
+  knowledge_id: 456
+  type: text
+  contents: http://www.example.com/
+  private: false
+  user_id: jhon.doe
+  user_name: lostman
+
+KnowledgeMapping1:
+  keywords:
+    - aaa
+    - bbb
+  knowledge: xxx
+
+KnowledgeMapping2:
+  keywords:
+    - ppp
+    - qqq
+  knowledge: yyy
+
+KnowledgeMapping3:
+  keywords:
+    - sss
+    - ttt
+  knowledge: zzz

@@ -1,0 +1,3 @@
+user:
+  $ref: './active-user.yml'
+knowledge_id: 123

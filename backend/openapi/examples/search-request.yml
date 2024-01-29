@@ -1,0 +1,3 @@
+user:
+  $ref: './active-user.yml'
+keyword: keyword-for-search

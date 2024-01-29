@@ -1,0 +1,10 @@
+DeleteRequest:
+  type: object
+  required:
+    - user
+    - knowledge_id
+  properties:
+    user:
+      $ref: './user.yml'
+    knowledge_id:
+      type: integer

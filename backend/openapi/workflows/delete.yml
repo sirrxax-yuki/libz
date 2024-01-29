@@ -1,0 +1,16 @@
+version: 1.1
+name: Delete API
+
+tests:
+  post:
+    steps:
+      - name: Delete a knowledge.
+        http:
+          url: http://${{env.APP_HOST}}:${{env.APP_PORT}}/delete
+          method: DELETE
+          json:
+            $ref: '../examples/delete-request.yml'
+          check:
+            status: /^20/
+          schema:
+            $ref: '../components/schemas/delete-response.yml'

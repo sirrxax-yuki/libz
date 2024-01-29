@@ -1,0 +1,17 @@
+sub: RRRRRRRR-RRRR-4RRR-rRRR-RRRRRRRRRRRR
+name: yuki kawata
+family_name: kawata
+given_name: yuki
+zoneinfo: Asia/Tokyo
+locale: null
+ext:
+  tenantId: ABCDEFGH
+  userId: yuki.kawata
+  status: inactive
+  description: null
+  roles:
+    - PowerUser
+  permittedServices:
+    - foo
+    - bar
+updated_at: 12345678

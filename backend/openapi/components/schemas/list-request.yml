@@ -1,0 +1,7 @@
+ListRequest:
+  type: object
+  required:
+    - user
+  properties:
+    user:
+      $ref: './user.yml'

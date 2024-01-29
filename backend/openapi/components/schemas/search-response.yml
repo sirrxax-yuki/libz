@@ -1,0 +1,9 @@
+SearchResponse:
+  type: object
+  required:
+    - results
+  properties:
+    results:
+      type: array
+      items:
+        $ref: './knowledge.yml'

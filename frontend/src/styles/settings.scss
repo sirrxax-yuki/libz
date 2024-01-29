@@ -1,0 +1,45 @@
+:root {
+  min-width: 375px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+#app {
+  font-family: 'Roboto', 'Yu Gothic UI Light', monospace;
+}
+
+.text-transform-none {
+  text-transform: none;
+}
+
+.icon-link {
+  color: rgb(var(--v-theme-basetext));
+}
+
+.table-header {
+  background-color: rgb(var(--v-theme-background00));
+}
+
+.table-record-01 {
+  background-color: rgb(var(--v-theme-background01));
+}
+
+.table-record-02 {
+  background-color: rgb(var(--v-theme-background02));
+}
+
+.hide-on-smartphone {
+  @media (max-width: 520px) {
+    display: none;
+  }
+}
+
+@font-face {
+  font-family: 'Arrancar';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('@/assets/font/Arrancar.ttf') format('truetype');
+}

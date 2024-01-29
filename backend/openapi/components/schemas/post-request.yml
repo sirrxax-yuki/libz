@@ -1,0 +1,21 @@
+PostRequest:
+  type: object
+  required:
+    - user
+    - keywords
+    - knowledge
+    - knowledge_id
+    - private
+  properties:
+    user:
+      $ref: './user.yml'
+    keywords:
+      type: array
+      items:
+        type: string
+    knowledge:
+      type: string
+    knowledge_type:
+      type: string
+    private:
+      type: boolean

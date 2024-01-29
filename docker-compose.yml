@@ -1,0 +1,71 @@
+version: '3'
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: libz-backend
+    container_name: libz-backend
+    volumes:
+      - ./backend:/backend
+    networks:
+      - libz-network
+    working_dir: /backend
+    environment:
+      TZ: Asia/Tokyo
+      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: ${DATABASE_NAME}
+    tty: true
+    restart: on-failure
+    command: uvicorn src.main:app --host 0.0.0.0 --port 3304 --reload
+  
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - RSI_CLIENT_ID=xxxxxxxx
+        - RSI_AUTH_REDIRECT_URL=https://www.example.com/login/redirect
+    image: libz-frontend
+    container_name: libz-frontend
+    volumes:
+      - ./frontend:/frontend
+      - frontend-node-modules:/frontend/node_modules
+      - frontend-dist:/frontend/dist
+    networks:
+      - libz-network
+    working_dir: /frontend
+    environment:
+      TZ: Asia/Tokyo
+    tty: true
+    restart: on-failure
+  
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: libz-server
+    container_name: libz-server
+    ports:
+      - 80:80
+    volumes:
+      - ./server/nginx.conf:/etc/nginx/nginx.conf
+      - ./server/production.d:/etc/nginx/conf.d
+      - ./server/log:/var/log/nginx
+      - frontend-dist:/frontend/dist
+    networks:
+      - libz-network
+    environment:
+      TZ: Asia/Tokyo
+    tty: true
+    restart: on-failure
+
+volumes:
+  frontend-node-modules:
+  frontend-dist:
+
+networks:
+  libz-network:

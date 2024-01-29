@@ -1,0 +1,22 @@
+Knowledge:
+  type: object
+  required:
+    - knowledge_id
+    - type
+    - contents
+    - private
+    - user_id
+    - user_name
+  properties:
+    knowledge_id:
+      type: integer
+    type:
+      type: string
+    contents:
+      type: string
+    private:
+      type: boolean
+    user_id:
+      type: string
+    user_name:
+      type: string
