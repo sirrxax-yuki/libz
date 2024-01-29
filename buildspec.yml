@@ -6,13 +6,14 @@ env:
     DOCKER_HUB_USER: /libz/dockerhub/user
     DOCKER_HUB_TOKEN: /libz/dockerhub/token
     ECR_ENDPOINT: /libz/ecr/endpoint
+    ECR_REGION: /libz/ecr/region
     RSI_CLIENT_ID: /libz/app/rsi/client-id
     RSI_AUTH_REDIRECT_URL: /libz/app/rsi/auth-redirect-url
 
 phases:
   pre_build:
     commands:
-      - aws ecr get-login-password | 
+      - aws ecr get-login-password --region ${ECR_REGION} | 
           docker login --username AWS --password-stdin ${ECR_ENDPOINT}
       - echo ${DOCKER_HUB_TOKEN} |
           docker login -u ${DOCKER_HUB_USER} --password-stdin
