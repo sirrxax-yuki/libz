@@ -26,8 +26,10 @@ phases:
           --build-arg RSI_AUTH_REDIRECT_URL=${RSI_AUTH_REDIRECT_URL}
   post_build:
     commands:
-      - echo "push ${ECR_ENDPOINT}/libz:${IMAGE_TAG} to Amazon ECR"
+      - echo "push libz:${IMAGE_TAG} to Amazon ECR"
       - docker push ${ECR_ENDPOINT}/libz:${IMAGE_TAG}
 artifacts:
-  files: tools/deploy.sh
+  files:
+    - appspec.yml
+    - tools/deploy.sh
   discard-paths: yes
