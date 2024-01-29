@@ -1,8 +1,11 @@
 version: 0.2
 env:
+  variables:
+    PROJECT_VERSION: 1.0.0
   parameter-store:
     DOCKER_HUB_USER: /libz/dockerhub/user
     DOCKER_HUB_TOKEN: /libz/dockerhub/token
+    ECR_ENDPOINT: /libz/ecr/endpoint
     RSI_CLIENT_ID: /libz/app/rsi/client-id
     RSI_AUTH_REDIRECT_URL: /libz/app/rsi/auth-redirect-url
 
