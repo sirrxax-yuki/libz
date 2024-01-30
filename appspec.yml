@@ -8,3 +8,6 @@ hooks:
     - location: ./deploy.sh
       runas: root
       timeout: 120
+      env:
+        - name: IMAGE_TAG
+          value: '{{Build.IMAGE_TAG}}'
