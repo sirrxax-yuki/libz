@@ -8,8 +8,6 @@ IMAGE_TAG = $(cat artifacts.json | jq -r '.imageTag')
 
 docker rm -f libz-app 2>/dev/null
 
-echo "deploy by ${IMAGE_TAG}"
-
 aws ecr get-login-password | docker login --username AWS --password-stdin ${AWS_REGISTRY}
 docker pull ${IMAGE_TAG}
 
