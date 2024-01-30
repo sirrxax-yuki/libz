@@ -35,5 +35,5 @@ artifacts:
   files:
     - appspec.yml
     - artifacts.json
-    - tools/deploy.sh
+    - tools/deploy_*.sh
   discard-paths: yes

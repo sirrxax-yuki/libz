@@ -1,16 +1,9 @@
 #!/bin/sh
 
-AWS_REGISTRY=$(aws ssm get-parameter --query "Parameter.Value" --output text --name /libz/ecr/endpoint)
 AWS_DATABASE=$(aws ssm get-parameter --query "Parameter.Value" --output text --name /libz/db/endpoint)
 AWS_DATABASE_USER=$(aws ssm get-parameter --query "Parameter.Value" --output text --name /libz/db/user)
 AWS_DATABASE_PASSWORD=$(aws ssm get-parameter --query "Parameter.Value" --output text --name /libz/db/password --with-decryption)
 IMAGE_TAG=$(cat /app/artifacts.json | jq -r '.imageTag')
-
-docker rm -f libz-app 2>/dev/null
-
-aws ecr get-login-password | docker login --username AWS --password-stdin ${AWS_REGISTRY}
-
-docker pull ${IMAGE_TAG}
 
 docker run \
     --name libz-app \

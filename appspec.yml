@@ -3,8 +3,17 @@ os: linux
 files:
   - source: /
     destination: /app
+file_exists_behavior: OVERWRITE
 hooks:
+  BeforeInstall:
+    - location: ./deploy_beforeinstall.sh
+      runas: root
+      timeout: 120
+  AfterInstall:
+    - location: ./deploy_afterinstall.sh
+      runas: root
+      timeout: 120
   ApplicationStart:
-    - location: ./deploy.sh
+    - location: ./deploy_applicationstart.sh
       runas: root
       timeout: 120
