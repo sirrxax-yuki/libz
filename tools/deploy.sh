@@ -10,10 +10,6 @@ docker rm -f libz-app 2>/dev/null
 
 aws ecr get-login-password | docker login --username AWS --password-stdin ${AWS_REGISTRY}
 
-which jq
-ls -al
-echo ${IMAGE_TAG}
-
 docker pull ${IMAGE_TAG}
 
 docker run \
