@@ -13,7 +13,8 @@ phases:
   pre_build:
     on-failure: ABORT
     commands:
-      - export IMAGE_TAG=${PROJECT_VERSION}-$(echo ${CODEBUILD_RESOLVED_SOURCE_VERSION} | cut -c 1-7)
+      - export VERSION_TAG=${PROJECT_VERSION}-$(echo ${CODEBUILD_RESOLVED_SOURCE_VERSION} | cut -c 1-7)
+      - export IMAGE_TAG=${ECR_ENDPOINT}/libz:${VERSION_TAG}
       - aws ecr get-login-password |
           docker login --username AWS --password-stdin ${ECR_ENDPOINT}
       - echo ${DOCKER_HUB_TOKEN} |
@@ -22,14 +23,14 @@ phases:
     on-failure: ABORT
     commands:
       - docker build .
-          -t ${ECR_ENDPOINT}/libz:${IMAGE_TAG}
+          -t ${IMAGE_TAG}
           --build-arg RSI_CLIENT_ID=${RSI_CLIENT_ID}
           --build-arg RSI_AUTH_REDIRECT_URL=${RSI_AUTH_REDIRECT_URL}
   post_build:
     on-failure: ABORT
     commands:
-      - docker push ${ECR_ENDPOINT}/libz:${IMAGE_TAG}
-      - printf '{ "imageTag":"%s" }' $IMAGE_TAG > artifacts.json
+      - docker push ${IMAGE_TAG}
+      - printf '{ "imageTag":"%s" }' ${IMAGE_TAG} > artifacts.json
 artifacts:
   files:
     - appspec.yml
