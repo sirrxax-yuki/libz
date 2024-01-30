@@ -8,7 +8,7 @@ AWS_DATABASE_PASSWORD=$(aws ssm get-parameter --query "Parameter.Value" --output
 docker rm -f libz-app 2>/dev/null
 
 aws ecr get-login-password | docker login --username AWS --password-stdin ${AWS_REGISTRY}
-docker pull ${Build.IMAGE_TAG}
+docker pull ${Build_IMAGE_TAG}
 
 docker run \
     --name libz-app \
@@ -18,4 +18,4 @@ docker run \
     -e DATABASE_USER=${AWS_DATABASE_USER} \
     -e DATABASE_PASSWORD=${AWS_DATABASE_PASSWORD} \
     -e DATABASE_NAME=libz \
-    -d ${Build.IMAGE_TAG}
+    -d ${Build_IMAGE_TAG}
