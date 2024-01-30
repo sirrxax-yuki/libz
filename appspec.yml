@@ -10,4 +10,4 @@ hooks:
       timeout: 120
       env:
         - name: IMAGE_TAG
-          value: '{{Build.IMAGE_TAG}}'
+          value: '#{Build.IMAGE_TAG}'
