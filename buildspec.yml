@@ -28,7 +28,6 @@ phases:
   post_build:
     on-failure: ABORT
     commands:
-      - echo "push libz:${IMAGE_TAG} to Amazon ECR"
       - docker push ${ECR_ENDPOINT}/libz:${IMAGE_TAG}
       - printf '{ "imageTag":"%s" }' $IMAGE_TAG > artifacts.json
 artifacts:
