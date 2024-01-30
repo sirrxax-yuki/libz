@@ -3,7 +3,7 @@
 AWS_REGISTRY=$(aws ssm get-parameter --query "Parameter.Value" --output text --name /libz/ecr/endpoint)
 AWS_DATABASE=$(aws ssm get-parameter --query "Parameter.Value" --output text --name /libz/db/endpoint)
 AWS_DATABASE_USER=$(aws ssm get-parameter --query "Parameter.Value" --output text --name /libz/db/user)
-AWS_DATABASE_PASSWORD=$(aws ssm get-parameter --query "Parameter.Value" --output text --name /libz/db/password -–with-decryption)
+AWS_DATABASE_PASSWORD=$(aws ssm get-parameter --query "Parameter.Value" --output text --name /libz/db/password --with-decryption)
 IMAGE_NAME=${AWS_REGISTRY_NAME}/libz:latest
 
 docker rm -f libz-app 2>/dev/null
