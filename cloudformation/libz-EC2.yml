@@ -1,0 +1,57 @@
+Parameters:
+  AMI:
+    Type : AWS::SSM::Parameter::Value<String>
+    Default: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64
+    AllowedValues:
+    - /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64
+  InstanceType:
+    Type: String
+    Default: t2.micro
+    Description: EC2 instance type
+    AllowedValues:
+      - t2.micro
+      - t3.micro
+      - m5.large
+  Env:
+    Type: String
+    Default: dev
+    Description: Env
+    AllowedValues:
+      - dev
+      - production
+
+Resources:
+  AppEC2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref AMI
+      InstanceType: !Ref InstanceType
+      DisableApiTermination: false
+      KeyName: !ImportValue libz-keypair
+      IamInstanceProfile: !ImportValue libz-app-instance-profile
+      NetworkInterfaces:
+        - DeviceIndex: 0
+          AssociatePublicIpAddress: true
+          SubnetId: !ImportValue libz-public-subnet-1a
+          GroupSet:
+            - !ImportValue libz-app-sg
+      UserData:
+        Fn::Base64: |
+          #!/bin/sh
+          dnf install docker ruby -y
+          gpasswd -a ec2-user docker
+          usermod -aG docker ec2-user
+          systemctl enable docker
+          service docker start
+          curl -O https://aws-codedeploy-ap-northeast-1.s3.amazonaws.com/latest/install
+          chmod +x install
+          ./install auto
+      Tags:
+        - Key: Name
+          Value: !Sub libz-${Env}-app-instance
+
+  EIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: libz
+      InstanceId: !Ref AppEC2

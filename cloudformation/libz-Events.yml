@@ -1,0 +1,21 @@
+Resources:
+  Event:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: libz-deploy-event
+      State: ENABLED
+      EventPattern:
+        source:
+          - prefix: github.com
+        detail-type:
+          - push
+        detail:
+          ref:
+            - refs/heads/master
+          repository:
+            full_name:
+              - !Sub ${Owner}/${Repository}
+      Targets:
+        - Id: CodePipeline
+          Arn: !Sub arn:aws:codepipeline:${AWS::Region}:${AWS::AccountId}:${CP}
+          RoleArn: !ImportValue libz-cp-trigger-role
