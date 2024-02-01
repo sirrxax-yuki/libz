@@ -1,0 +1,39 @@
+Resources:
+  S3:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: libz-bucket
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      NotificationConfiguration:
+        EventBridgeConfiguration:
+          EventBridgeEnabled: true
+
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Deny
+            Action:
+              - s3:*
+            Resource:
+              - !Sub arn:aws:s3:::${S3}
+              - !Sub arn:aws:s3:::${S3}/*
+            Principal:
+              AWS: '*'
+            Condition:
+              Bool:
+                'aws:SecureTransport': false
+
+Outputs:
+  OutputS3:
+    Value: !Ref S3
+    Export:
+      Name: libz-bucket

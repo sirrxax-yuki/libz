@@ -1,0 +1,205 @@
+Resources:
+  AppPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: libz-app-policy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - ecr:GetAuthorizationToken
+            Resource:
+              - '*'
+          - Effect: Allow
+            Action:
+              - ecr:*
+            Resource:
+              - !Sub 'arn:aws:ecr:*:${AWS::AccountId}:repository/*'
+
+  AppRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: libz-app-role
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforAWSCodeDeploy
+        - !Ref AppPolicy
+
+  GHA:
+    Type: AWS::IAM::OIDCProvider
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ClientIdList:
+        - sigstore
+        - sts.amazonaws.com
+      ThumbprintList:
+        - a031c46782e6e6c662c2c87c76da9aa62ccabd8e
+
+  GHAPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: libz-gha-policy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - ecr:GetAuthorizationToken
+            Resource:
+              - '*'
+          - Effect: Allow
+            Action:
+              - ecr:PutImage
+              - ecr:UploadLayerPart
+              - ecr:InitiateLayerUpload
+              - ecr:CompleteLayerUpload
+              - ecr:BatchCheckLayerAvailability
+            Resource:
+              - !Sub 'arn:aws:ecr:*:${AWS::AccountId}:repository/*'
+
+  GHPullPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: libz-gh-pull-policy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - codestar-connections:UseConnection
+            Resource:
+              - '*'
+
+  GHARole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: libz-gha-role
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Ref GHA
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+              StringLike:
+                token.actions.githubusercontent.com:sub: repo:*:*
+      ManagedPolicyArns:
+        - !Ref GHAPolicy
+
+  CBPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: libz-cb-policy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - ecr:*
+            Resource:
+              - '*'
+
+  CBRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: libz-cb-role
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+        - arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/AWSCodeCommitReadOnly
+        - !Ref CBPolicy
+        - !Ref GHPullPolicy
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - codebuild.amazonaws.com
+            Action: sts:AssumeRole
+
+  CDRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: libz-cd-role
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - codedeploy.amazonaws.com
+            Action: sts:AssumeRole
+
+  CPRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: libz-cp-role
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/AWSCodeCommitFullAccess
+        - arn:aws:iam::aws:policy/AWSCodeBuildAdminAccess
+        - arn:aws:iam::aws:policy/AWSCodeDeployFullAccess
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - codepipeline.amazonaws.com
+            Action: sts:AssumeRole
+
+  CPTriggerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: libz-cp-trigger-role
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSCodePipeline_FullAccess
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - events.amazonaws.com
+            Action: sts:AssumeRole
+
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      InstanceProfileName: libz-app-instance-profile
+      Roles:
+        - !Ref AppRole
+
+Outputs:
+  OutputCBRole:
+    Value: !GetAtt CBRole.Arn
+    Export:
+      Name: libz-cb-role
+  OutputCDRole:
+    Value: !GetAtt CDRole.Arn
+    Export:
+      Name: libz-cd-role
+  OutputCPRole:
+    Value: !GetAtt CPRole.Arn
+    Export:
+      Name: libz-cp-role
+  OutputCPTriggerRole:
+    Value: !GetAtt CPTriggerRole.Arn
+    Export:
+      Name: libz-cp-trigger-role
+  OutputInstanceProfile:
+    Value: !Ref InstanceProfile
+    Export:
+      Name: libz-app-instance-profile

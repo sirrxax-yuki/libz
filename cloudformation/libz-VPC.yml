@@ -1,0 +1,103 @@
+Parameters:
+  DefaultVPC:
+    Type: String
+    Default: vpc-09aecace3a0a558c5
+    Description: VPC ID.
+    AllowedValues:
+      - vpc-09aecace3a0a558c5
+
+Resources:
+  ALBSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: libz-alb-sg
+      GroupDescription: libz-alb-sg
+      VpcId: !Ref DefaultVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: libz-alb-sg
+
+  AppSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: libz-app-sg
+      GroupDescription: libz-app-sg
+      VpcId: !Ref DefaultVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 133.139.0.0/16
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 180.55.188.0/24
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          SourceSecurityGroupId: !Ref ALBSG
+      Tags:
+        - Key: Name
+          Value: libz-app-sg
+
+  DBSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: libz-db-sg
+      GroupDescription: libz-db-sg
+      VpcId: !Ref DefaultVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          SourceSecurityGroupId: !Ref AppSG
+      Tags:
+        - Key: Name
+          Value: libz-db-sg
+
+Outputs:
+  OutputALBSG:
+    Value: !Ref ALBSG
+    Export:
+      Name: libz-alb-sg
+  OutputAppSG:
+    Value: !Ref AppSG
+    Export:
+      Name: libz-app-sg
+  OutputDBSG:
+    Value: !Ref DBSG
+    Export:
+      Name: libz-db-sg
+  OutputVPC:
+    Value: !Ref DefaultVPC
+    Export:
+      Name: libz-vpc
+  OutputPublicSubnet1a:
+    Value: subnet-0e82c660aa6f402aa
+    Export:
+      Name: libz-public-subnet-1a
+  OutputPublicSubnet1c:
+    Value: subnet-0c590e12926f17ab1
+    Export:
+      Name: libz-public-subnet-1c
+  OutputPublicSubnet1d:
+    Value: subnet-0ad95bb1c31b9d570
+    Export:
+      Name: libz-public-subnet-1d
+  OutputPrivateSubnet1a:
+    Value: subnet-0647781a8ddc617b5
+    Export:
+      Name: libz-private-subnet-1a
+  OutputPrivateSubnet1c:
+    Value: subnet-011f1793123422a2b
+    Export:
+      Name: libz-private-subnet-1c
+  OutputPrivateSubnet1d:
+    Value: subnet-0bacd5ae25f18545d
+    Export:
+      Name: libz-private-subnet-1d

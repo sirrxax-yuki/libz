@@ -1,0 +1,44 @@
+Resources:
+  ECR:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: libz
+      RepositoryPolicyText: 
+        Statement: 
+          - Effect: Allow
+            Action: 
+              - ecr:*
+            Principal: 
+              AWS: 
+                - !Sub arn:aws:iam::${AWS::AccountId}:root
+      EmptyOnDelete: true
+      ImageScanningConfiguration:
+        ScanOnPush: true
+      ImageTagMutability: IMMUTABLE
+      EncryptionConfiguration:
+        EncryptionType: AES256
+      LifecyclePolicy:
+        LifecyclePolicyText: >
+          {
+            "rules": [
+              {
+                "rulePriority": 1,
+                "description": "Delete old images.",
+                "action": {
+                  "type": "expire"
+                },
+                "selection": {
+                  "countType": "imageCountMoreThan",
+                  "countNumber": 3,
+                  "tagStatus": "any"
+                }
+              }
+            ]
+          }
+        RegistryId: !Ref AWS::AccountId
+
+Outputs:
+  OutputECR:
+    Value: !Ref ECR
+    Export:
+      Name: libz-ecr
