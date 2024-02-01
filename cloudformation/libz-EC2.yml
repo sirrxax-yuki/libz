@@ -55,3 +55,9 @@ Resources:
     Properties:
       Domain: libz
       InstanceId: !Ref AppEC2
+
+Outputs:
+  OutputAppEC2:
+    Value: !Ref AppEC2
+    Export:
+      Name: !Sub libz-${Env}-app-instance

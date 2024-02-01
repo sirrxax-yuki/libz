@@ -7,6 +7,21 @@ Parameters:
       - vpc-09aecace3a0a558c5
 
 Resources:
+  ALBSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: libz-alb-sg
+      GroupDescription: libz-alb-sg
+      VpcId: !Ref DefaultVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: libz-alb-sg
+
   AppSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -25,7 +40,7 @@ Resources:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
-          CidrIp: 0.0.0.0/0
+          SourceSecurityGroupId: !Ref ALBSG
       Tags:
         - Key: Name
           Value: libz-app-sg
@@ -46,6 +61,10 @@ Resources:
           Value: libz-db-sg
 
 Outputs:
+  OutputALBSG:
+    Value: !Ref ALBSG
+    Export:
+      Name: libz-alb-sg
   OutputAppSG:
     Value: !Ref AppSG
     Export:
