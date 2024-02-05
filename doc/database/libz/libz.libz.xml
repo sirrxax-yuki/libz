@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><database name="libz" schema="libz" type="MySQL - 11.2.2-MariaDB-1:11.2.2+maria~ubu2204">
+   <tables>
+      <table catalog="libz" name="favorite" numRows="0" remarks="" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="favorite_id" nullable="false" remarks="" size="10" type="INT" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="comment" nullable="false" remarks="" size="65535" type="TEXT" typeCode="-1"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="user_id" nullable="false" remarks="" size="36" type="VARCHAR" typeCode="12">
+            <parent catalog="libz" column="user_id" foreignKey="favorite_ibfk_1" implied="false" onDeleteCascade="true" table="user"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="knowledge_id" nullable="false" remarks="" size="10" type="INT" typeCode="4">
+            <parent catalog="libz" column="knowledge_id" foreignKey="favorite_ibfk_2" implied="false" onDeleteCascade="true" table="knowledge"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="create_datetime" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="update_datetime" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <primaryKey column="favorite_id" sequenceNumberInPK="1"/>
+         <index name="favorite_s_pk" unique="true">
+            <column ascending="true" name="favorite_id"/>
+         </index>
+         <index name="knowledge_id" unique="false">
+            <column ascending="true" name="knowledge_id"/>
+         </index>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="favorite_id"/>
+         </index>
+         <index name="user_id" unique="false">
+            <column ascending="true" name="user_id"/>
+         </index>
+      </table>
+      <table catalog="libz" name="keyword" numRows="0" remarks="" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="keyword_id" nullable="false" remarks="" size="10" type="INT" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="text" nullable="false" remarks="" size="65535" type="TEXT" typeCode="-1"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="knowledge_id" nullable="false" remarks="" size="10" type="INT" typeCode="4">
+            <parent catalog="libz" column="knowledge_id" foreignKey="keyword_ibfk_1" implied="false" onDeleteCascade="true" table="knowledge"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="create_datetime" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="update_datetime" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <primaryKey column="keyword_id" sequenceNumberInPK="1"/>
+         <index name="keyword_s_pk" unique="true">
+            <column ascending="true" name="keyword_id"/>
+         </index>
+         <index name="knowledge_id" unique="false">
+            <column ascending="true" name="knowledge_id"/>
+         </index>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="keyword_id"/>
+         </index>
+      </table>
+      <table catalog="libz" name="knowledge" numRows="0" remarks="" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="knowledge_id" nullable="false" remarks="" size="10" type="INT" typeCode="4">
+            <child catalog="libz" column="knowledge_id" foreignKey="favorite_ibfk_2" implied="false" onDeleteCascade="true" table="favorite"/>
+            <child catalog="libz" column="knowledge_id" foreignKey="keyword_ibfk_1" implied="false" onDeleteCascade="true" table="keyword"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="type_id" nullable="false" remarks="" size="8" type="VARCHAR" typeCode="12">
+            <parent catalog="libz" column="knowledge_type_id" foreignKey="knowledge_ibfk_1" implied="false" onDeleteCascade="true" table="knowledge_type"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="contents" nullable="false" remarks="" size="65535" type="TEXT" typeCode="-1"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="private" nullable="false" remarks="" size="3" type="TINYINT" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="user_id" nullable="false" remarks="" size="36" type="VARCHAR" typeCode="12">
+            <parent catalog="libz" column="user_id" foreignKey="knowledge_ibfk_2" implied="false" onDeleteCascade="true" table="user"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="create_datetime" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="update_datetime" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <primaryKey column="knowledge_id" sequenceNumberInPK="1"/>
+         <index name="knowledge_s_pk" unique="true">
+            <column ascending="true" name="knowledge_id"/>
+         </index>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="knowledge_id"/>
+         </index>
+         <index name="type_id" unique="false">
+            <column ascending="true" name="type_id"/>
+         </index>
+         <index name="user_id" unique="false">
+            <column ascending="true" name="user_id"/>
+         </index>
+      </table>
+      <table catalog="libz" name="knowledge_type" numRows="2" remarks="" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="knowledge_type_id" nullable="false" remarks="" size="8" type="VARCHAR" typeCode="12">
+            <child catalog="libz" column="type_id" foreignKey="knowledge_ibfk_1" implied="false" onDeleteCascade="true" table="knowledge"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="create_datetime" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="update_datetime" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <primaryKey column="knowledge_type_id" sequenceNumberInPK="1"/>
+         <index name="knowledge_type_s_pk" unique="true">
+            <column ascending="true" name="knowledge_type_id"/>
+         </index>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="knowledge_type_id"/>
+         </index>
+      </table>
+      <table catalog="libz" name="tenant" numRows="0" remarks="" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="tenant_id" nullable="false" remarks="" size="36" type="VARCHAR" typeCode="12">
+            <child catalog="libz" column="tenant_id" foreignKey="user_ibfk_1" implied="false" onDeleteCascade="true" table="user"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="create_datetime" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="update_datetime" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <primaryKey column="tenant_id" sequenceNumberInPK="1"/>
+         <index name="tenant_s_pk" unique="true">
+            <column ascending="true" name="tenant_id"/>
+         </index>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="tenant_id"/>
+         </index>
+      </table>
+      <table catalog="libz" name="user" numRows="0" remarks="" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="user_id" nullable="false" remarks="" size="36" type="VARCHAR" typeCode="12">
+            <child catalog="libz" column="user_id" foreignKey="favorite_ibfk_1" implied="false" onDeleteCascade="true" table="favorite"/>
+            <child catalog="libz" column="user_id" foreignKey="knowledge_ibfk_2" implied="false" onDeleteCascade="true" table="knowledge"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="user_name" nullable="false" remarks="" size="65535" type="TEXT" typeCode="-1"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="tenant_id" nullable="false" remarks="" size="36" type="VARCHAR" typeCode="12">
+            <parent catalog="libz" column="tenant_id" foreignKey="user_ibfk_1" implied="false" onDeleteCascade="true" table="tenant"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="create_datetime" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="update_datetime" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <primaryKey column="user_id" sequenceNumberInPK="1"/>
+         <index name="user_s_pk" unique="true">
+            <column ascending="true" name="user_id"/>
+         </index>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="user_id"/>
+         </index>
+         <index name="tenant_id" unique="false">
+            <column ascending="true" name="tenant_id"/>
+         </index>
+      </table>
+   </tables>
+</database>

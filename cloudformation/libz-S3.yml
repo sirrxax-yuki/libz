@@ -12,6 +12,13 @@ Resources:
       NotificationConfiguration:
         EventBridgeConfiguration:
           EventBridgeEnabled: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: libz-bucket-lifecycle
+            Status: Enabled
+            ExpirationInDays: 1
+            AbortIncompleteMultipartUpload:
+              DaysAfterInitiation: 1
 
   BucketPolicy:
     Type: AWS::S3::BucketPolicy
@@ -31,6 +38,14 @@ Resources:
             Condition:
               Bool:
                 'aws:SecureTransport': false
+          - Effect: Allow
+            Action:
+              - s3:PutObject
+            Resource:
+              - !Sub arn:aws:s3:::${S3}
+              - !Sub arn:aws:s3:::${S3}/*
+            Principal:
+              AWS: !Sub arn:aws:iam::582318560864:root
 
 Outputs:
   OutputS3:

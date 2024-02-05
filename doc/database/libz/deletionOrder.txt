@@ -1,0 +1,6 @@
+favorite
+keyword
+knowledge
+user
+tenant
+knowledge_type

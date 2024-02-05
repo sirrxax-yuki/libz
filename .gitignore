@@ -178,4 +178,5 @@ node_modules
 nohup.out
 /frontend/dist
 /database/data
+/database/schemaspy/output
 /server/log

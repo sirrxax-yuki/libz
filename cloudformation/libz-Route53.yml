@@ -1,0 +1,20 @@
+Parameters:
+  DomainName:
+    Type: String
+    Default: jrits.libz-search.net
+    Description: Domain name.
+  HostedZoneID:
+    Type: String
+    Default: Z00064771BS3S0WEVN3PU
+    Description: Hosted zone ID.
+
+Resources:
+  RecordSet:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZoneID
+      Name: !Ref DomainName
+      Type: A
+      AliasTarget:
+        DNSName: !ImportValue libz-alb-dns
+        HostedZoneId: !ImportValue libz-alb-hz

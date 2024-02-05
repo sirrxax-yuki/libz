@@ -76,7 +76,7 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - ./database/data:/var/lib/mysql
+      - database-volume:/var/lib/mysql
       - ./database/conf/my.cnf:/etc/mysql/conf.d/my.cnf
     networks:
       - libz-network
@@ -89,9 +89,28 @@ services:
     tty: true
     restart: on-failure
 
+  schemaspy:
+    build:
+      context: ./database
+      dockerfile: schemaspy/Dockerfile
+    image: libz-schemaspy
+    container_name: libz-schemaspy
+    depends_on:
+      - database
+    volumes:
+      - ./database/schemaspy/output:/output
+      - ./database/schemaspy/schemaspy.properties:/schemaspy.properties
+    networks:
+      - libz-network
+    environment:
+      TZ: Asia/Tokyo
+    tty: true
+    restart: on-failure
+
 volumes:
   frontend-node-modules:
   frontend-dist:
+  database-volume:
 
 networks:
   libz-network:
