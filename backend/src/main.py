@@ -13,6 +13,8 @@ from api.schemas.post import PostKnowledgeRequest, PostKnowledgeResponse
 from api.schemas.search import SearchKnowledgeRequest, SearchKnowledgeResponse
 from controller.knowledge import KnowledgeController
 from models.exception import LibzException
+from logs import logger
+from time import time
 
 
 app = FastAPI()
@@ -38,16 +40,19 @@ async def health():
 async def search(request_body: SearchKnowledgeRequest):
     controller = KnowledgeController()
     response = SearchKnowledgeResponse()
+    start = time()
     response.results = controller.fetch_knowledge(
         request_body.user,
         request_body.keyword,
     )
+    logger.info(f"fetch_knowledge: {round(time() - start, 3)} sec.")
     return response
 
 @app.post("/post", response_model=PostKnowledgeResponse)
 async def post(request_body: PostKnowledgeRequest):
     controller = KnowledgeController()
     response = PostKnowledgeResponse()
+    start = time()
     response.knowledge_id = controller.insert_knowledge(
         request_body.user,
         request_body.keywords,
@@ -55,23 +60,28 @@ async def post(request_body: PostKnowledgeRequest):
         request_body.knowledge_type,
         request_body.private,
     )
+    logger.info(f"insert_knowledge: {round(time() - start, 3)} sec.")
     return response
 
 @app.post("/list", response_model=ListKnowledgeResponse)
 async def list(request_body: ListKnowledgeRequest):
     controller = KnowledgeController()
     response = ListKnowledgeResponse()
+    start = time()
     response.results = controller.listup_knowledge(
         request_body.user,
     )
+    logger.info(f"listup_knowledge: {round(time() - start, 3)} sec.")
     return response
 
 @app.delete("/delete", response_model=DeleteKnowledgeResponse)
 async def delete(request_body: DeleteKnowledgeRequest):
     controller = KnowledgeController()
     response = DeleteKnowledgeResponse()
+    start = time()
     response.update = controller.delete_knowledge(
         request_body.user,
         request_body.knowledge_id,
     )
+    logger.info(f"delete_knowledge: {round(time() - start, 3)} sec.")
     return response

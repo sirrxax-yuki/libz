@@ -4,6 +4,8 @@ from controller.user import User
 from models.database.knowledge import KnowledgeDatabaseAccessor
 from models.exception import UserInactiveException
 from settings import DEBUG_MODE
+from logs import logger
+from time import time
 
 
 class KnowledgeController:
@@ -68,6 +70,8 @@ class KnowledgeController:
         user = User(user_schema)
         if not user.is_active:
             raise UserInactiveException
+        start = time()
         database.upsert_user(user.user_id, user.user_name, user.tenant_id)
+        logger.info(f"upsert_user: {round(time() - start, 3)} sec.")
         return user.user_id
     
