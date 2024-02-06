@@ -43,6 +43,6 @@ Outputs:
     Export:
       Name: libz-ecr
   OutputECRURL:
-    Value: !Ref ECR.RepositoryUri
+    Value: !GetAtt ECR.RepositoryUri
     Export:
       Name: libz-ecr-url

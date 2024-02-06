@@ -1,8 +1,10 @@
 Parameters:
   DBUser:
-    Type: String
-    Default: master
-    Description: DB user name.
+    Type: AWS::SSM::Parameter::Name
+    Default: /libz/db/user
+    Description: DB username.
+    AllowedValues:
+      - /libz/db/user
   DBPassword:
     Type: AWS::SSM::Parameter::Name
     Default: /libz/db/password
@@ -15,6 +17,7 @@ Parameters:
     Description: DB instance class
     AllowedValues:
       - db.t3.micro
+      - db.t3.small
       - db.m5d.large
   StorageSize:
     Type: Number
@@ -54,25 +57,28 @@ Resources:
       Engine: mariadb
       EngineVersion: 10.11
       AllowMajorVersionUpgrade: true
-      AutoMinorVersionUpgrade: false
+      AutoMinorVersionUpgrade: true
       DBInstanceIdentifier: libz-db
       DBInstanceClass: !Ref InstanceClass
       PubliclyAccessible: false
-      MultiAZ: true
+      MultiAZ: false
       DBSubnetGroupName: !Ref DBSubnets
       DBParameterGroupName: !Ref DBPG
       VPCSecurityGroups:
         - !ImportValue libz-db-sg
       StorageType: gp2
       AllocatedStorage: !Ref StorageSize
+      MaxAllocatedStorage: !Ref StorageSize
       StorageEncrypted: true
       CACertificateIdentifier: rds-ca-rsa4096-g1
       BackupRetentionPeriod: 14
-      MasterUsername: !Ref DBUser
+      MasterUsername: !Sub '{{resolve:ssm:${DBUser}}}'
       MasterUserPassword: !Sub '{{resolve:ssm-secure:${DBPassword}}}'
       DBName: libz
       DeletionProtection: false
       CopyTagsToSnapshot: true
+      MonitoringInterval: 60
+      MonitoringRoleArn: !ImportValue libz-db-monitoring-role
       EnableCloudwatchLogsExports:
         - audit
         - error
