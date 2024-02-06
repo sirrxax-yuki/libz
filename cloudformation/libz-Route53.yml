@@ -1,7 +1,7 @@
 Parameters:
   DomainName:
     Type: String
-    Default: jrits.libz-search.net
+    Default: libz-search.net
     Description: Domain name.
   HostedZoneID:
     Type: String

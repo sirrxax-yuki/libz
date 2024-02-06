@@ -1,13 +1,11 @@
-Parameters:
-  Env:
-    Type: String
-    Default: dev
-    Description: Env
-    AllowedValues:
-      - dev
-      - production
-
 Resources:
+  Certificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: 'libz-search.net'
+      ValidationMethod: DNS
+      KeyAlgorithm: RSA_2048
+  
   ALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
@@ -45,7 +43,7 @@ Resources:
       Port: 80
       Targets:
         - Id:
-            Fn::ImportValue: !Sub libz-${Env}-app-instance
+            Fn::ImportValue: !Sub libz-dev-app-instance
       VpcId: !ImportValue libz-vpc
 
   AppListener:
@@ -55,8 +53,26 @@ Resources:
       Protocol: HTTP
       Port: 80
       DefaultActions:
+        - Type: redirect
+          RedirectConfig:
+            Protocol: HTTPS
+            Host: '#{host}'
+            Port: 443
+            Path: '/#{path}'
+            Query: '#{query}'
+            StatusCode: HTTP_301
+
+  AppListenerSSL:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref ALB
+      Protocol: HTTPS
+      Port: 443
+      DefaultActions:
         - Type: forward
           TargetGroupArn: !Ref AppTG
+      Certificates:
+        - CertificateArn: !Ref Certificate
 
 Outputs:
   OutputALBDNS:

@@ -35,6 +35,55 @@ Resources:
         - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforAWSCodeDeploy
         - !Ref AppPolicy
 
+  DBMonitoringRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: libz-db-monitoring-role
+      AssumeRolePolicyDocument:
+        Statement: 
+          - Effect: Allow
+            Principal: 
+              Service: 
+                - monitoring.rds.amazonaws.com
+            Action: 
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole
+
+  ECSTaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: libz-ecs-task-role
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforAWSCodeDeploy
+
+  ECSTaskExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: libz-ecs-task-execution-role
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        # - arn:aws:iam::aws:policy/AmazonECS_FullAccess
+        - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+        - arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess
+        - !Ref AppPolicy
+
   GHA:
     Type: AWS::IAM::OIDCProvider
     Properties:
@@ -183,6 +232,18 @@ Resources:
         - !Ref AppRole
 
 Outputs:
+  OutoutDBMonitoringRole:
+    Value: !GetAtt DBMonitoringRole.Arn
+    Export:
+      Name: libz-db-monitoring-role
+  OutputECSTaskRole:
+    Value: !GetAtt ECSTaskRole.Arn
+    Export:
+      Name: libz-ecs-task-role
+  OutputECSTaskExecutionRole:
+    Value: !GetAtt ECSTaskExecutionRole.Arn
+    Export:
+      Name: libz-ecs-task-execution-role
   OutputCBRole:
     Value: !GetAtt CBRole.Arn
     Export:

@@ -11,6 +11,8 @@ Parameters:
     AllowedValues:
       - t2.micro
       - t3.micro
+      - t3.small
+      - t3.medium
       - m5.large
   Env:
     Type: String
