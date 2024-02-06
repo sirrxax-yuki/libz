@@ -56,10 +56,12 @@ const onSearch = () => {
         user: store.auth.user,
         keyword: keyword.value,
     };
+    const start = Date.now();
     axios.post('/api/search', request)
     .then((response: AxiosResponse<SearchResponse>) => {
         store.knowledge.search.keyword = keyword.value;  
         store.knowledge.search.knowledges = response.data.results;
+        console.log(`/api/search : ${Date.now() - start} sec.`);
         if (response.data.results.length !== 0) {
             showResult.value = true;
         }

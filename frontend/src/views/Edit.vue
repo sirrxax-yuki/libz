@@ -42,9 +42,11 @@ const fetchKnowledges = (): void => {
     const request = {
         user: store.auth.user,
     };
+    const start = Date.now();
     axios.post('/api/list', request)
     .then((response: AxiosResponse<ListResponse>) => {
         store.knowledge.list.mappings = response.data.results;
+        console.log(`/api/list : ${Date.now() - start} sec.`);
         if (response.data.results.length !== 0) {
             showResult.value = true;
         }

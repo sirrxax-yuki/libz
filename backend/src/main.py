@@ -52,7 +52,6 @@ async def search(request_body: SearchKnowledgeRequest):
 async def post(request_body: PostKnowledgeRequest):
     controller = KnowledgeController()
     response = PostKnowledgeResponse()
-    start = time()
     response.knowledge_id = controller.insert_knowledge(
         request_body.user,
         request_body.keywords,
@@ -60,7 +59,6 @@ async def post(request_body: PostKnowledgeRequest):
         request_body.knowledge_type,
         request_body.private,
     )
-    logger.info(f"insert_knowledge: {round(time() - start, 3)} sec.")
     return response
 
 @app.post("/list", response_model=ListKnowledgeResponse)
@@ -78,10 +76,8 @@ async def list(request_body: ListKnowledgeRequest):
 async def delete(request_body: DeleteKnowledgeRequest):
     controller = KnowledgeController()
     response = DeleteKnowledgeResponse()
-    start = time()
     response.update = controller.delete_knowledge(
         request_body.user,
         request_body.knowledge_id,
     )
-    logger.info(f"delete_knowledge: {round(time() - start, 3)} sec.")
     return response
