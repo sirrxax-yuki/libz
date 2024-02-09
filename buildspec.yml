@@ -30,10 +30,14 @@ phases:
     on-failure: ABORT
     commands:
       - docker push ${IMAGE_TAG}
-      - printf '{ "imageTag":"%s" }' ${IMAGE_TAG} > artifacts.json
+      - printf '{ "imageUri":"%s" }' ${IMAGE_TAG} > artifacts.json
+      - printf '{ "ImageURI":"%s" }' ${IMAGE_TAG} > imageDetail.json
+      - printf '[ { "name":"libz", "imageUri":"%s" } ]' ${IMAGE_TAG} > imagedefinitions.json
 artifacts:
   files:
     - appspec.yml
     - artifacts.json
+    - imageDetail.json
+    - imagedefinitions.json
     - tools/deploy_*.sh
   discard-paths: yes
