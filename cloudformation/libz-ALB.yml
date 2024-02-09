@@ -35,15 +35,20 @@ Resources:
         - Key: connection_logs.s3.prefix
           Value: connection
 
-  AppTG:
+  ECSTG:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: !Sub libz-app-tg
+      Name: libz-ecs-tg
       Protocol: HTTP
       Port: 80
-      Targets:
-        - Id:
-            Fn::ImportValue: !Sub libz-dev-app-instance
+      VpcId: !ImportValue libz-vpc
+
+  ECSTG2:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: libz-ecs-tg-green
+      Protocol: HTTP
+      Port: 8080
       VpcId: !ImportValue libz-vpc
 
   AppListener:
@@ -70,7 +75,19 @@ Resources:
       Port: 443
       DefaultActions:
         - Type: forward
-          TargetGroupArn: !Ref AppTG
+          TargetGroupArn: !Ref ECSTG
+      Certificates:
+        - CertificateArn: !Ref Certificate
+
+  TestListenerSSL:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref ALB
+      Protocol: HTTPS
+      Port: 8443
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref ECSTG
       Certificates:
         - CertificateArn: !Ref Certificate
 
@@ -83,7 +100,19 @@ Outputs:
     Value: !GetAtt ALB.CanonicalHostedZoneID
     Export:
       Name: libz-alb-hz
-  OutputAppTG:
-    Value: !Ref AppTG
+  OutputECSTG:
+    Value: !Ref ECSTG
     Export:
-      Name: libz-app-tg
+      Name: libz-ecs-tg
+  OutputECSTG2:
+    Value: !Ref ECSTG2
+    Export:
+      Name: libz-ecs-tg-green
+  OutputAppListenerSSL:
+    Value: !Ref AppListenerSSL
+    Export:
+      Name: libz-app-listener
+  OutputTestListenerSSL:
+    Value: !Ref TestListenerSSL
+    Export:
+      Name: libz-test-listener

@@ -32,6 +32,8 @@ Resources:
         - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
         - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
         - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/AmazonECS_FullAccess
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role
         - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforAWSCodeDeploy
         - !Ref AppPolicy
 
@@ -79,10 +81,24 @@ Resources:
                 - ecs-tasks.amazonaws.com
             Action: sts:AssumeRole
       ManagedPolicyArns:
-        # - arn:aws:iam::aws:policy/AmazonECS_FullAccess
         - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
         - arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess
-        - !Ref AppPolicy
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+
+  ECSServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: libz-ecs-service-role
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEC2FullAccess
+        - arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess
 
   GHA:
     Type: AWS::IAM::OIDCProvider
@@ -184,6 +200,8 @@ Resources:
     Properties:
       RoleName: libz-cd-role
       ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonECS_FullAccess
+        - arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess
         - arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole
       AssumeRolePolicyDocument:
         Statement:
@@ -199,9 +217,13 @@ Resources:
       RoleName: libz-cp-role
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/AmazonEC2FullAccess
+        - arn:aws:iam::aws:policy/AutoScalingFullAccess
+        - arn:aws:iam::aws:policy/AmazonECS_FullAccess
         - arn:aws:iam::aws:policy/AWSCodeCommitFullAccess
         - arn:aws:iam::aws:policy/AWSCodeBuildAdminAccess
         - arn:aws:iam::aws:policy/AWSCodeDeployFullAccess
+        - arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
@@ -244,6 +266,10 @@ Outputs:
     Value: !GetAtt ECSTaskExecutionRole.Arn
     Export:
       Name: libz-ecs-task-execution-role
+  OutputECSServiceRole:
+    Value: !GetAtt ECSServiceRole.Arn
+    Export:
+      Name: libz-ecs-service-role
   OutputCBRole:
     Value: !GetAtt CBRole.Arn
     Export:
@@ -264,3 +290,7 @@ Outputs:
     Value: !Ref InstanceProfile
     Export:
       Name: libz-app-instance-profile
+  OutputInstanceProfileArn:
+    Value: !GetAtt InstanceProfile.Arn
+    Export:
+      Name: libz-app-instance-profile-arn
