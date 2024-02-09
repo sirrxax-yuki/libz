@@ -114,5 +114,4 @@
     "memory": "1024",
     "registeredAt": "2024-02-08T09:11:07.540Z",
     "registeredBy": "arn:aws:sts::211125611070:assumed-role/libz-cloud-formation/AWSCloudFormation",
-    "tags": []
 }
