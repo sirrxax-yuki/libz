@@ -39,5 +39,6 @@ artifacts:
     - artifacts.json
     - imageDetail.json
     - imagedefinitions.json
+    - taskdef.json
     - tools/deploy_*.sh
   discard-paths: yes
